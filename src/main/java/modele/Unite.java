@@ -1,5 +1,7 @@
 package modele;
 
+import modele.utilitaires.Genre;
+
 public class Unite {
 	
 	//public enum Genre{STANDARD,SNIPER,POISON,GRENADE}

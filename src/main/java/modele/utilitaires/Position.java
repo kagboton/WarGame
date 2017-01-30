@@ -1,4 +1,4 @@
-package modele;
+package modele.utilitaires;
 
 /**
  * Created by o2156238 on 23/01/17.

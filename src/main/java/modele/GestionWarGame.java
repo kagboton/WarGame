@@ -3,6 +3,10 @@ package modele;
 import modele.exceptions.ExceptionJoueurDejaExistant;
 import modele.exceptions.ExceptionJoueurInnexistant;
 import modele.exceptions.ExceptionPeupleInexistant;
+import modele.joueur.Joueur;
+import modele.utilitaires.Genre;
+import modele.utilitaires.Peuple;
+import modele.utilitaires.Position;
 
 import java.util.*;
 
@@ -13,7 +17,9 @@ public class GestionWarGame implements IGestionWarGame {
 
     private Joueur[] joueurs = new Joueur[2];
     Collection<Unite> armee;
-    //Peuple p;
+    Position position;
+    int basex, basey;
+    //Peuple peuple;
     static int id =0;
 
     //Constructeur par défaut
@@ -49,27 +55,41 @@ public class GestionWarGame implements IGestionWarGame {
     }
 
     @Override
-    public Unite creerUnite(Peuple p) {
-        Unite u;
-        switch(p){
-            case MARTIEN:
-                id++;
-                u=new Unite("Soldat"+id, 20, 5, 10, 15, 25,basex,basey);
-                armee.add(u);
-                
-                return u;
-            case TERRIEN:
-            default:
-                id++;
-                u=new Unite("Soldat"+id, 15, 8, 7, 10, 30,basex,basey);
-                armee.add(u);
-
-                return u;
+    public Unite creerUnite(String nom, Peuple p) throws ExceptionJoueurInnexistant {
+        Unite u = null;
+        for (Joueur j : joueurs) {
+            if (!nom.equals(j.getNom())) {
+                throw new ExceptionJoueurInnexistant();
+            } else {
+                switch (p) {
+                    case MARTIEN:
+                        u = nouvelleUnite("Soldat", 20, 5, 10, 15, 25, position);
+                        armee.add(u);
+                    case TERRIEN:
+                    default:
+                        u = nouvelleUnite("Soldat", 15, 8, 7, 10, 30,position);
+                        armee.add(u);
+                }
+            }
         }
+        return u;
+    }
+
+    private Unite nouvelleUnite(String nomUnite, int att, int def, int mvt, int portee, int vie, Position p){
+        id++;
+        return new Unite(nomUnite+id, att, def, mvt, portee, vie, p.x, p.y);
+
     }
 
     @Override
     public void changerNatureUnite(String nom, Genre g) {
 
     }
+
+    @Override
+    public void afficherUnite(String nom, Unite u) {
+
+    }
+
+
 }

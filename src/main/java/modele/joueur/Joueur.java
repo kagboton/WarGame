@@ -1,6 +1,12 @@
-package modele;
+package modele.joueur;
 
-import java.util.ArrayList;
+
+import modele.Attaque;
+import modele.utilitaires.Genre;
+import modele.utilitaires.Peuple;
+import modele.Unite;
+import modele.utilitaires.Position;
+
 import java.util.Collection;
 
 
@@ -8,13 +14,11 @@ public class Joueur {
 	
 	private String nom;
     private int idJoueur;
-    private static int identifiant = 0;
     Peuple p;
-    Position position;
-    int basex,basey;
+
+    private static int identifiant = 0;
 
 	Collection<Unite> armee;
-
 
 
     //Constructeur avec des paramètres
@@ -35,6 +39,7 @@ public class Joueur {
         this.nom = nom;
     }
 
+
     public int getIdJoueur() {
         return idJoueur;
     }
@@ -42,6 +47,7 @@ public class Joueur {
     public void setIdJoueur(int idJoueur) {
         this.idJoueur = idJoueur;
     }
+
 
     public Peuple getP() {
         return p;
@@ -51,28 +57,10 @@ public class Joueur {
         this.p = p;
     }
 
-    public int getBasex() {
-        return basex;
-    }
-
-    public void setBasex(int basex) {
-        this.basex = position.x;
-    }
-
-    public int getBasey() {
-        return basey;
-    }
-
-    public void setBasey(int basey) {
-        this.basey = position.y;
-    }
 
     public Collection<Unite> getArmee() {
         return armee;
     }
-
-
-
 
 	
 	public void changerTypeUnite(String nom, Genre g){

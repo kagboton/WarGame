@@ -1,5 +1,8 @@
 package modele;
 
+import modele.utilitaires.Genre;
+import modele.utilitaires.Peuple;
+
 import java.util.ArrayList;
 import java.util.Collection;
 

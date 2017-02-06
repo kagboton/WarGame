@@ -1,5 +1,6 @@
-package modele;
+package modele.facade;
 
+import modele.unite.Unite;
 import modele.exceptions.ExceptionJoueurDejaExistant;
 import modele.exceptions.ExceptionJoueurInnexistant;
 import modele.exceptions.ExceptionPeupleInexistant;

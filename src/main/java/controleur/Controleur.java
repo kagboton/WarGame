@@ -1,7 +1,7 @@
 package controleur;
 
-import modele.GestionWarGame;
-import modele.IGestionWarGame;
+import modele.facade.GestionWarGame;
+import modele.facade.IGestionWarGame;
 import modele.exceptions.ExceptionJoueurDejaExistant;
 
 /**

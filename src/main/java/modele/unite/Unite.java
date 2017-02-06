@@ -1,140 +1,182 @@
 package modele.unite;
 
-import modele.comportements.attaque.StrategieAttaque;
-import modele.comportements.attaque.AttaqueStandard;
-import modele.comportements.deplacement.Deplacement;
-import modele.comportements.deplacement.DeplacementStandard;
+import modele.attaques.AttaqueClassique;
 import modele.utilitaires.Genre;
 
-/**
- * Created by o2156238 on 30/01/17.
- */
 public class Unite {
+	
+	//public enum Genre{STANDARD,SNIPER,POISON,GRENADE}
+	
+	String nom;
+	
+	int att,def,mvt,portee,vie,xpos,ypos;
+	
+	boolean empoisonne;
+	int dureeempoisonnement;
+	
+	Genre g;
 
-    private String nom;
-    private StrategieAttaque typeAttaque = new AttaqueStandard();
-    private Deplacement typeDeplacement = new DeplacementStandard();
-    private int att, def, mvt, portee, vie, xpos, ypos;
-    private boolean empoisonne;
-    private int dureeEmpoisonnement;
-    private Genre g;
+	public Unite(String nom, int att, int def, int mvt, int portee, int vie,
+			int xpos, int ypos) {
+		super();
+		this.nom = nom;
+		this.att = att;
+		this.def = def;
+		this.mvt = mvt;
+		this.portee = portee;
+		this.vie = vie;
+		this.xpos = xpos;
+		this.ypos = ypos;
+		this.g = Genre.STANDARD;
+		empoisonne=false;
+	}
+	
+	public String getNom() {
+		return nom;
+	}
 
-    //Constructeur avec des parametres
-    public Unite(String nom, int att, int def, int mvt, int portee, int vie, int xpos, int ypos){
-        this.nom = nom;
-        this.att = att;
-        this.def = def;
-        this.mvt = mvt;
-        this.portee = portee;
-        this.vie = vie;
-        this.xpos = xpos;
-        this.ypos = ypos;
-        this.g = Genre.STANDARD;
-        empoisonne=false;
-    }
+	public Genre getG() {
+		return g;
+	}
+
+	public void setG(Genre g) {
+		this.g = g;
+	}
+
+	public int getAtt() {
+		return att;
+	}
+
+	public int getMvt() {
+		return mvt;
+	}
+
+	public int getDef() {
+		return def;
+	}
+
+	public int getVie() {
+		return vie;
+	}
+
+	public int getXpos() {
+		return xpos;
+	}
+
+	public int getYpos() {
+		return ypos;
+	}
+
+	public int getPortee() {
+		return portee;
+	}
 
 
-    public String getNom() {
-        return nom;
-    }
+	public void deplace(int x, int y){
+		int mvtmodifie=mvt;
+		if(empoisonne) mvtmodifie-=2; 
+		if(Math.abs(x-xpos)+Math.abs(y-ypos)<=mvtmodifie){			
+			xpos=x;
+			ypos=y;
+		//	System.out.println("L'unite "+nom+" se deplace en "+xpos+", "+ypos);
+		}else{
+			//System.out.println("L'unite "+nom+" ne peut se deplacer si loin");
+		}
+	}
+	
+	public AttaqueClassique attaque(int x, int y){
+		int attmodifie, porteemodifie;
+		int rayon=0;
+		boolean poison;
 
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
+		switch(g){
+		case STANDARD:					
+			attmodifie=att;
+			porteemodifie=portee;
+			poison=false;
+			rayon = 10;
+			break;
+		case SNIPER:
+			attmodifie=att-5;
+			porteemodifie=portee+3;
+			poison=false;
+			rayon=1;
+			break;
+		case POISON:
+			attmodifie=att-5;
+			porteemodifie=portee-3;
+			poison=true;
+			rayon=20;
+			break;
+		case GRENADE:
+			attmodifie=att+5;
+			porteemodifie=portee-3;
+			poison=false;
+			rayon=50;
+			break;
+		default :
+			attmodifie=att;
+			porteemodifie=portee;
+			poison=false;
+			break;				
+		}
+		
+		if(Math.sqrt(Math.pow((xpos-x),2)+Math.pow((ypos-y),2))<=porteemodifie){
+			//System.out.println("L'unite "+nom+" attaque et fait un maximum de "+attmodifie+" en degats");
+			return new AttaqueClassique(attmodifie,x,y,rayon,poison);
+		}else{
+			//System.out.println("L'unite "+nom+" ne peut attaquer si loin");
+			return new AttaqueClassique(0,x,y,0,false);
+		}
+	}
 
-    public StrategieAttaque getTypeAttaque() {
-        return typeAttaque;
-    }
+	/**
+	 * Permet d'empoisonner l'unite courante.
+	 */
+	public void setEmpoisonne() {
+		dureeempoisonnement = 5;
+		empoisonne = true;
+	}
 
-    public void setTypeAttaque(StrategieAttaque typeAttaque) {
-        this.typeAttaque = typeAttaque;
-    }
+	public String defendre(AttaqueClassique a){
+		String s = "";
+		//System.out.println(Math.sqrt(Math.pow((a.getImpactX()-this.getXpos()),2)+ Math.pow((a.getImpactY()-this.getYpos()),2)));
+		//System.out.println(a.getRayon());
+		if (Math.sqrt(Math.pow((a.getImpactX()-this.getXpos()),2)+ Math.pow((a.getImpactY()-this.getYpos()),2))<=a.getRayon()){
+			int deg=a.getDegat()-def;
+			if(deg<0) deg=0;
+			if(deg>vie) deg=vie;
+			vie-=deg;
+			if(a.getPoison()){
+				empoisonne=true;
+				dureeempoisonnement=5;
+			}
+			//System.out.println("L'unite "+nom+" se defend contre "+def+" degats");
+			//System.out.println("L'unite "+nom+" perd "+deg+" points de vie (il lui reste "+vie+")");
+			if(empoisonne) System.out.println("L'unite "+nom+" est empoisonnee");
+		}
+		else {
+			System.out.println("plouf");
+		}
+	}
+	
+	public void finDeTour(){
+		if(empoisonne){
+			dureeempoisonnement--;
+			if(dureeempoisonnement==0) empoisonne=false;
+		}
+	}
 
-    public Deplacement getTypeDeplacement() {
-        return typeDeplacement;
-    }
 
-    public void setTypeDeplacement(Deplacement typeDeplacement) {
-        this.typeDeplacement = typeDeplacement;
-    }
 
-    public int getAtt() {
-        return att;
-    }
+	public void print(){
+		System.out.println("Unite \t"+nom);
+		System.out.println("Vie : \t"+vie);
+		System.out.println("Att : \t"+att);
+		System.out.println("Def : \t"+def);
+		System.out.println("Portee : \t"+portee);
+		System.out.println("Position : \t("+xpos+","+ypos+")");
+		if(empoisonne) System.out.println("EMPOISSONNE");
+	}
 
-    public void setAtt(int att) {
-        this.att = att;
-    }
-
-    public int getDef() {
-        return def;
-    }
-
-    public void setDef(int def) {
-        this.def = def;
-    }
-
-    public int getMvt() {
-        return mvt;
-    }
-
-    public void setMvt(int mvt) {
-        this.mvt = mvt;
-    }
-
-    public int getPortee() {
-        return portee;
-    }
-
-    public void setPortee(int portee) {
-        this.portee = portee;
-    }
-
-    public int getVie() {
-        return vie;
-    }
-
-    public void setVie(int vie) {
-        this.vie = vie;
-    }
-
-    public int getXpos() {
-        return xpos;
-    }
-
-    public void setXpos(int xpos) {
-        this.xpos = xpos;
-    }
-
-    public int getYpos() {
-        return ypos;
-    }
-
-    public void setYpos(int ypos) {
-        this.ypos = ypos;
-    }
-
-    public boolean isEmpoisonne() {
-        return empoisonne;
-    }
-
-    public void setEmpoisonne(boolean empoisonne) {
-        this.empoisonne = empoisonne;
-    }
-
-    public int getDureeEmpoisonnement() {
-        return dureeEmpoisonnement;
-    }
-
-    public void setDureeEmpoisonnement(int dureeEmpoisonnement) {
-        this.dureeEmpoisonnement = dureeEmpoisonnement;
-    }
-
-    public Genre getG() {
-        return g;
-    }
-
-    public void setG(Genre g) {
-        this.g = g;
-    }
 }

@@ -1,19 +1,19 @@
-package modele.comportements.attaque;
+package modele.comportements;
 
-
+import modele.attaques.IAttaque;
 import modele.unite.Unite;
-
 /**
  * Created by o2156238 on 30/01/17.
  */
-public class AttaqueGrenade implements StrategieAttaque {
+public class StratAttaqueGrenade implements IStratAttaque {
 
     int attmodifie, porteemodifie;
     int rayon=0;
-    boolean poison;
+
+
 
     @Override
-    public void attaquer(Unite u, int x, int y) {
+    public IAttaque attaque(Unite u, int x, int y) {
         attmodifie = u.getAtt()+5;
         porteemodifie=u.getPortee()-3;
         poison=false;

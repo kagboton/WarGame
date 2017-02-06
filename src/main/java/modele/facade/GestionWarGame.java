@@ -1,12 +1,11 @@
-package modele;
+package modele.facade;
 
+import modele.unite.Unite;
 import modele.exceptions.ExceptionJoueurDejaExistant;
 import modele.exceptions.ExceptionJoueurInnexistant;
 import modele.exceptions.ExceptionPeupleInexistant;
-import modele.joueur.Joueur;
 import modele.utilitaires.Genre;
 import modele.utilitaires.Peuple;
-import modele.utilitaires.Position;
 
 import java.util.*;
 

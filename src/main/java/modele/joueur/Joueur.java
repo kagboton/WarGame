@@ -1,67 +1,68 @@
 package modele.joueur;
 
-
-import modele.Attaque;
+import modele.unite.Unite;
+import modele.attaques.AttaqueClassique;
 import modele.utilitaires.Genre;
 import modele.utilitaires.Peuple;
-import modele.Unite;
-import modele.utilitaires.Position;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 
 public class Joueur {
-	
-	private String nom;
-    private int idJoueur;
+
+	//public enum Peuple{TERRIEN,MARTIEN}
+
+	String nom;
+    int basex,basey;
     Peuple p;
-
-    private static int identifiant = 0;
-
 	Collection<Unite> armee;
 
+	static int id=0;
 
-    //Constructeur avec des paramètres
-	public Joueur(String nom) {
-        this.idJoueur = identifiant;
+
+	public Joueur(String nom, Peuple p, int basex, int basey) {
+		//super();
 		this.nom = nom;
-        identifiant++;
+		this.p = p;
+		this.basex = basex;
+		this.basey = basey;
+		armee=new ArrayList<Unite>();
 	}
-
-    /**
-     * Getters et Setters
-     */
-    public String getNom() {
-        return nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-
-    public int getIdJoueur() {
-        return idJoueur;
-    }
-
-    public void setIdJoueur(int idJoueur) {
-        this.idJoueur = idJoueur;
-    }
-
-
-    public Peuple getP() {
-        return p;
-    }
-
-    public void setP(Peuple p) {
-        this.p = p;
-    }
-
 
     public Collection<Unite> getArmee() {
         return armee;
     }
 
+	public String getNom() {
+		return nom;
+	}
+
+    /**
+     * Methode pour créer une unité
+     * @return Unite
+     */
+	public Unite creerUnite(){
+		Unite u;
+		switch(p){		
+		case MARTIEN:
+			id++;
+			u=new Unite("Soldat"+id, 20, 5, 10, 15, 25,basex,basey);
+			armee.add(u); 
+			//System.out.println("Unite formee par "+nom+" :");
+			//u.print();
+			return u;
+		case TERRIEN:
+		default:
+			id++;
+			u=new Unite("Soldat"+id, 15, 8, 7, 10, 30,basex,basey);
+			armee.add(u);
+			//System.out.println("Unite formee par "+nom+" :");
+			//u.print();
+			return u;
+		}
+		
+	}
 	
 	public void changerTypeUnite(String nom, Genre g){
 		for(Unite e:armee)
@@ -77,19 +78,26 @@ public class Joueur {
 	
 	
 	
-	public void defendre(Attaque a){
+	public String defendre(AttaqueClassique a){
+		String s = "";
+		Collection<Unite> monArmeeApresLaGuerre = new ArrayList<>();
 		for(Unite e:armee) {
-			e.defendre(a);
+			Unite bim = e.defendre(a);
+			monArmeeApresLaGuerre.add(bim);
+			s += bim.getAction() + "\n";
 			
 		}
+		armee.clear();
+		armee.addAll(monArmeeApresLaGuerre);
+		return s;
 
 	}
 	
-	public Attaque attaquer(String nom, int x, int y){
+	public AttaqueClassique attaquer(String nom, int x, int y){
 		for(Unite e:armee)
 			if(e.getNom().equals(nom))
 				return e.attaque(x, y);
-		return new Attaque(0,x,y,0, false);
+		return new AttaqueClassique(0,x,y,0, false);
 	}
 	
 	public void finDeTour(){
